@@ -1,0 +1,88 @@
+package com.raphael.cursoudemy.domain;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import java.io.Serializable;
+import java.util.Objects;
+
+@Entity
+@Table(name = "item_pedido")
+public class ItemPedido implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    @JsonIgnore
+    @EmbeddedId
+    private ItemPedidoPK id = new ItemPedidoPK();
+
+    private Double desconto;
+    private Double quantidade;
+    private  Double preco;
+
+    public ItemPedido() {
+    }
+
+    public ItemPedido(Pedido pedido, Produto produto, Double desconto, Double quantidade, Double preco) {
+        id.setPedido(pedido);
+        id.setProduto(produto);
+        this.desconto = desconto;
+        this.quantidade = quantidade;
+        this.preco = preco;
+    }
+
+    public ItemPedidoPK getId() {
+        return id;
+    }
+
+    public void setId(ItemPedidoPK id) {
+        this.id = id;
+    }
+
+    public Double getDesconto() {
+        return desconto;
+    }
+
+    public void setDesconto(Double desconto) {
+        this.desconto = desconto;
+    }
+
+    public Double getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(Double quantidade) {
+        this.quantidade = quantidade;
+    }
+
+    public Double getPreco() {
+        return preco;
+    }
+
+    public void setPreco(Double preco) {
+        this.preco = preco;
+    }
+
+    @JsonIgnore
+    public Pedido getPedido(){
+        return id.getPedido();
+    }
+
+    public Produto getProduto(){
+        return id.getProduto();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ItemPedido that = (ItemPedido) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+}
