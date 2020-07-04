@@ -1,9 +1,15 @@
 package com.raphael.cursoudemy.services;
 
 import com.raphael.cursoudemy.domain.Categoria;
+import com.raphael.cursoudemy.dto.CategoriaDTO;
 import com.raphael.cursoudemy.repositories.CategoriaRepository;
+import com.raphael.cursoudemy.services.exceptions.DataIntegrityException;
 import com.raphael.cursoudemy.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,18 +21,44 @@ public class CategoriaService {
     @Autowired
     CategoriaRepository categoriaRepository;
 
-    public List<Categoria> listar() {
+    public List<Categoria> listAll() {
         return categoriaRepository.findAll();
     }
 
-    public Categoria find(Integer id) {
+    public Categoria findById(Integer id) {
         Optional<Categoria> categoria = categoriaRepository.findById(id);
         return categoria.orElseThrow(() -> new ObjectNotFoundException(
                 "Objeto não encontrado! Id: " + id + ", Tipo: " + Categoria.class.getName()));
     }
 
 
-    public Categoria salvar(Categoria categoria){
+    public Categoria insert(Categoria obj) {
+        obj.setId(null);
+        return categoriaRepository.save(obj);
+    }
+
+    public Categoria update(Categoria categoria) {
+        findById(categoria.getId());
         return categoriaRepository.save(categoria);
     }
+
+    public void delete(Integer id) {
+        try {
+            findById(id);
+            categoriaRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityException("Exclusão não permitida, categoria possui produtos vinculados!");
+        }
+
+    }
+
+    public Page<Categoria> findPage(Integer page, Integer linesPerPage, String orderBy, String direction) {
+        PageRequest pageRequest = PageRequest.of(page, linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+        return categoriaRepository.findAll(pageRequest);
+    }
+
+    public Categoria fromDTO(CategoriaDTO categoriaDTO){
+       return new Categoria(categoriaDTO.getId(), categoriaDTO.getDescricao());
+    }
+
 }

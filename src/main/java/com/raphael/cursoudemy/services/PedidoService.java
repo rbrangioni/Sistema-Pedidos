@@ -1,8 +1,6 @@
 package com.raphael.cursoudemy.services;
 
-import com.raphael.cursoudemy.domain.Categoria;
 import com.raphael.cursoudemy.domain.Pedido;
-import com.raphael.cursoudemy.repositories.CategoriaRepository;
 import com.raphael.cursoudemy.repositories.PedidoRepository;
 import com.raphael.cursoudemy.services.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,18 +15,27 @@ public class PedidoService {
     @Autowired
     PedidoRepository pedidoRepository;
 
-    public List<Pedido> listar() {
+    public List<Pedido> list() {
         return pedidoRepository.findAll();
     }
 
-    public Pedido find(Integer id) {
+    public Pedido findById(Integer id) {
         Optional<Pedido> pedido = pedidoRepository.findById(id);
         return pedido.orElseThrow(() -> new ObjectNotFoundException(
                 "Objeto não encontrado! Id: " + id + ", Tipo: " + Pedido.class.getName()));
     }
 
 
-    public Pedido salvar(Pedido pedido){
+    public Pedido save(Pedido pedido){
+        return pedidoRepository.save(pedido);
+    }
+
+    public Pedido insert(Pedido pedido){
+        return pedidoRepository.save(pedido);
+    }
+
+    public Pedido update(Pedido pedido){
+        findById(pedido.getId());
         return pedidoRepository.save(pedido);
     }
 }

@@ -6,10 +6,7 @@ import com.raphael.cursoudemy.repositories.PedidoRepository;
 import com.raphael.cursoudemy.services.PedidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,16 +21,30 @@ public class PedidoResources {
     PedidoService pedidoService;
 
     @GetMapping
-    public List<Pedido>listarPedidos(){
+    public List<Pedido>list(){
         return pedidoRepository.findAll();
 
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<?> BuscaPorId(@PathVariable Integer id){
-        Pedido pedido = pedidoService.find(id);
+    public ResponseEntity<?> findById(@PathVariable Integer id){
+
+        Pedido pedido = pedidoService.findById(id);
 
         return ResponseEntity.ok().body(pedido);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Pedido> update(@PathVariable Integer id, @RequestBody Pedido pedido){
+
+        if (pedidoService.findById(id)==null) {
+            return ResponseEntity.notFound().build();
+        }
+        pedido.setId(id);
+        pedido = pedidoService.insert(pedido);
+
+        return ResponseEntity.ok(pedido);
+
     }
 
 }
