@@ -47,15 +47,12 @@ public class CategoriaResources {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Categoria> update(@PathVariable Integer id, @RequestBody Categoria categoria){
+    public ResponseEntity<Void> update(@Valid @RequestBody CategoriaDTO objDto, @PathVariable Integer id){
+        Categoria obj = categoriaService.fromDTO(objDto);
+        obj.setId(id);
+        obj = categoriaService.update(obj);
 
-        if (categoriaService.findById(id)==null) {
-            return ResponseEntity.notFound().build();
-        }
-        categoria.setId(id);
-        categoria = categoriaService.insert(categoria);
-
-        return ResponseEntity.ok(categoria);
+        return ResponseEntity.noContent().build();
 
     }
     @DeleteMapping("{id}")

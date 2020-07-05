@@ -37,9 +37,9 @@ public class CategoriaService {
         return categoriaRepository.save(obj);
     }
 
-    public Categoria update(Categoria categoria) {
-        findById(categoria.getId());
-        return categoriaRepository.save(categoria);
+    public Categoria update(Categoria obj) {
+        findById(obj.getId());
+        return categoriaRepository.save(obj);
     }
 
     public void delete(Integer id) {
