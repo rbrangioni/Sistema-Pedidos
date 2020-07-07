@@ -1,6 +1,7 @@
 package com.raphael.cursoudemy.services;
 
 import com.raphael.cursoudemy.domain.Categoria;
+import com.raphael.cursoudemy.domain.Cliente;
 import com.raphael.cursoudemy.dto.CategoriaDTO;
 import com.raphael.cursoudemy.repositories.CategoriaRepository;
 import com.raphael.cursoudemy.services.exceptions.DataIntegrityException;
@@ -38,8 +39,9 @@ public class CategoriaService {
     }
 
     public Categoria update(Categoria obj) {
-        findById(obj.getId());
-        return categoriaRepository.save(obj);
+        Categoria newObj = findById(obj.getId());
+        updateData(newObj, obj);
+        return categoriaRepository.save(newObj);
     }
 
     public void delete(Integer id) {
@@ -59,6 +61,11 @@ public class CategoriaService {
 
     public Categoria fromDTO(CategoriaDTO categoriaDTO){
        return new Categoria(categoriaDTO.getId(), categoriaDTO.getDescricao());
+    }
+
+    private void updateData(Categoria newObj, Categoria obj){
+        newObj.setDescricao(obj.getDescricao());
+
     }
 
 }

@@ -21,7 +21,7 @@ public class Cliente implements Serializable {
     private String cpfCnpj;
     private Integer tipoCliente;
 
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<Endereco> enderecos = new ArrayList<>();
 
 
@@ -43,7 +43,7 @@ public class Cliente implements Serializable {
         this.nome = nome;
         this.email = email;
         this.cpfCnpj = cpfCnpj;
-        this.tipoCliente = tipoCliente.getCodigo();
+        this.tipoCliente =(tipoCliente==null ? null : tipoCliente.getCodigo());
     }
 
     public Integer getId() {
